@@ -10,11 +10,11 @@ import (
 )
 
 var songs = []models.Song{
-	{ID: 1,Title: "",File: "/songs/song1.mp3"},
-	{ID: 2,Title: "",File: "/songs/song2.mp3"},
-	{ID: 3,Title: "",File: "/songs/song3.mp3"},
-	{ID: 4,Title: "",File: "/songs/song4.mp3"},
-	{ID: 5,Title: "",File: "/songs/song5.mp3"},
+	{ID: 1,Title: "Song 1",File: "/songs/song1.mp3"},
+	{ID: 2,Title: "Song 2",File: "/songs/song2.mp3"},
+	{ID: 3,Title: "Song 3",File: "/songs/song3.mp3"},
+	{ID: 4,Title: "Song 4",File: "/songs/song4.mp3"},
+	{ID: 5,Title: "Song 5",File: "/songs/song5.mp3"},
 }
 func GetRandomSong(c *gin.Context){
 	rand.Seed(time.Now().UnixNano())
