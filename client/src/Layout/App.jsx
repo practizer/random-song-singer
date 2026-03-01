@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react'
 import api from '../api/axios'
 import PlantOnboarding from '../Components/PlantOnboarding'
 import './App.css'
-
 const DROPS = [
   { w: 5, h: 8, dur: '0.52s', delay: '0s' },
   { w: 7, h: 10, dur: '0.48s', delay: '0.12s' },
