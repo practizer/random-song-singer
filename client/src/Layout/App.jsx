@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import api from '../api/axios'
 import PlantOnboarding from '../Components/PlantOnboarding'
 import './App.css'
+
 const DROPS = [
   { w: 5, h: 8, dur: '0.52s', delay: '0s' },
   { w: 7, h: 10, dur: '0.48s', delay: '0.12s' },
@@ -41,20 +42,131 @@ const GRASS_BLADES = Array.from({ length: 60 }, (_, i) => {
   }
 })
 
+// Welcome messages the plant cycles through
+const WELCOME_MESSAGES = [
+  "I'm so happy to see you! 🌟",
+  "Water me and I'll sing for you! 🎵",
+  "I love making music with you! 🎶",
+  "Ready for our daily song? 💧",
+  "I missed you! Let's sing! 🌿",
+]
+
+function WelcomeBubble({ userName, onDismiss }) {
+  const [visible, setVisible] = useState(false)
+  const [message, setMessage] = useState('')
+  const [typedText, setTypedText] = useState('')
+
+  useEffect(() => {
+    // Pick a random welcome message
+    const msg = WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
+    setMessage(msg)
+
+    // Delay before showing bubble
+    const showTimer = setTimeout(() => {
+      setVisible(true)
+    }, 800)
+
+    return () => clearTimeout(showTimer)
+  }, [])
+
+  // Typewriter effect once visible
+  useEffect(() => {
+    if (!visible || !message) return
+    setTypedText('')
+    let charIndex = 0
+    const typeTimer = setInterval(() => {
+      if (charIndex <= message.length) {
+        setTypedText(message.slice(0, charIndex))
+        charIndex++
+      } else {
+        clearInterval(typeTimer)
+        // Auto-dismiss after 4 seconds
+        setTimeout(() => {
+          setVisible(false)
+          setTimeout(onDismiss, 400)
+        }, 4000)
+      }
+    }, 38)
+    return () => clearInterval(typeTimer)
+  }, [visible, message])
+
+  if (!visible && typedText === '') return null
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        bottom: 'calc(100% + 16px)',
+        right: '50%',
+        transform: 'translateX(50%)',
+        zIndex: 30,
+        opacity: visible ? 1 : 0,
+        transform: `translateX(50%) scale(${visible ? 1 : 0.8})`,
+        transition: 'opacity 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        pointerEvents: 'none',
+      }}
+    >
+      <div
+        style={{
+          background: 'white',
+          borderRadius: 18,
+          padding: '12px 18px',
+          minWidth: 200,
+          maxWidth: 260,
+          boxShadow: '0 6px 24px rgba(0,0,0,0.14)',
+          fontSize: '0.9rem',
+          fontWeight: 700,
+          color: '#1a3a1e',
+          textAlign: 'center',
+          fontFamily: "'Baloo 2', cursive",
+          border: '2px solid rgba(76, 175, 80, 0.25)',
+          lineHeight: 1.4,
+          whiteSpace: 'pre-wrap',
+          position: 'relative',
+        }}
+      >
+        {typedText}
+        <span style={{ opacity: 0.4, animation: 'blink 0.7s infinite' }}>|</span>
+        {/* Speech bubble tail pointing down */}
+        <div style={{
+          position: 'absolute',
+          bottom: -13,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 0,
+          height: 0,
+          borderLeft: '10px solid transparent',
+          borderRight: '10px solid transparent',
+          borderTop: '14px solid white',
+          filter: 'drop-shadow(0 3px 2px rgba(0,0,0,0.06))',
+        }} />
+      </div>
+      <style>{`
+        @keyframes blink {
+          0%, 100% { opacity: 0.4; }
+          50% { opacity: 0; }
+        }
+      `}</style>
+    </div>
+  )
+}
+
 function App() {
   const [song, setSong] = useState(null)
   const [isSinging, setIsSinging] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
   const [userName, setUserName] = useState(null)
   const [showOnboarding, setShowOnboarding] = useState(false)
+  const [showWelcome, setShowWelcome] = useState(false)
   const audioRef = useRef(null)
+  const plant = localStorage.getItem('plantType')
 
-  // Check localStorage on mount
   useEffect(() => {
     const storedName = localStorage.getItem('plantUserName')
     if (storedName) {
       setUserName(storedName)
       setShowOnboarding(false)
+      setShowWelcome(true)
     } else {
       setShowOnboarding(true)
     }
@@ -63,10 +175,12 @@ function App() {
   const handleOnboardingComplete = (name) => {
     setUserName(name)
     setShowOnboarding(false)
+    setTimeout(() => setShowWelcome(true), 500)
   }
 
   const waterPlant = async () => {
     if (isAnimating) return
+    setShowWelcome(false)
     try {
       const res = await api.get('/random-song')
       setSong(res.data)
@@ -134,8 +248,17 @@ function App() {
 
             <div className="scene-soil" />
 
-            <div className={`plant-wrapper ${isSinging ? 'dancing' : ''}`}>
-              <img src="/images/plant.png" alt="Plant" />
+            {/* Plant wrapper with welcome bubble */}
+            <div className={`plant-wrapper ${isSinging ? 'dancing' : ''}`} style={{ position: 'absolute' }}>
+              {/* Welcome bubble rendered above the plant */}
+              {showWelcome && !isSinging && !isAnimating && (
+                <WelcomeBubble
+                  userName={userName}
+                  onDismiss={() => setShowWelcome(false)}
+                />
+              )}
+
+              <img src={`/images/${plant}.png`} alt="Plant" />
               {isSinging && NOTES.map((n, i) => (
                 <span
                   key={i}
