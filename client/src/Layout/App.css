@@ -39,8 +39,8 @@ h1 { font-family: 'Baloo 2', cursive; font-weight: 800; letter-spacing: 1px; }
   position: absolute;
   top: 16px;
   right: 30px;
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
   background: radial-gradient(circle, #FFE87C 30%, #FFD700 70%, transparent 100%);
   border-radius: 50%;
   box-shadow: 
@@ -56,7 +56,7 @@ h1 { font-family: 'Baloo 2', cursive; font-weight: 800; letter-spacing: 1px; }
 
 .cloud {
   position: absolute;
-  font-size: 2rem;
+  font-size: 16rem;
   opacity: 0.6;
   filter: drop-shadow(2px 2px 4px rgba(255,255,255,0.8));
 }
@@ -70,7 +70,7 @@ h1 { font-family: 'Baloo 2', cursive; font-weight: 800; letter-spacing: 1px; }
 .cloud-2 {
   top: 45px;
   left: -120px;
-  font-size: 1.5rem;
+  font-size: 10rem;
   opacity: 0.4;
   animation: cloudFloat 28s linear infinite;
   animation-delay: -8s;
@@ -79,7 +79,7 @@ h1 { font-family: 'Baloo 2', cursive; font-weight: 800; letter-spacing: 1px; }
 .cloud-3 {
   top: 10px;
   left: -80px;
-  font-size: 1.8rem;
+  font-size: 8rem;
   opacity: 0.5;
   animation: cloudFloat 24s linear infinite;
   animation-delay: -14s;
