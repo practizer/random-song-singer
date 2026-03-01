@@ -182,16 +182,6 @@ function App() {
           💧 Water Plant
         </button>
 
-        {song && isSinging && (
-          <div className="bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg border border-green-200">
-            <p className="text-green-700 font-bold text-lg animate-pulse flex items-center gap-2">
-              <span className="text-2xl">🎵</span>
-              {song.title}
-              <span className="text-2xl">🎵</span>
-            </p>
-          </div>
-        )}
-
         <audio ref={audioRef} onEnded={stopSinging}>
           {song && (
             <source src={`http://localhost:8000${song.file}`} type="audio/mpeg" />
