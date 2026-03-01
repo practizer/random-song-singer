@@ -43,11 +43,11 @@ function App() {
           audioRef.current.play()
           setIsSinging(true)
         }
-      }, 1800)
+      }, 3200)
 
       setTimeout(() => {
         setIsAnimating(false)
-      }, 6200)
+      }, 10300)
 
     } catch (error) {
       console.error('Error fetching song:', error)
@@ -57,13 +57,13 @@ function App() {
   const stopSinging = () => setIsSinging(false)
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(180deg, #87CEEB 0%, #B0E0E6 40%, #90EE90 80%, #7CCD7C 100%)' }}>
-      <h1 className="bg-linear-to-r from-green-500 via-green-400 to-emerald-500 text-white font-bold text-4xl py-6 text-center shadow-lg tracking-wide">
+    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(180deg, #87CEEB 0%, #B0E0E6 40%, #90EE90 80%, #7CCD7C 100%)' }}>
+      <h1 className="bg-linear-to-r from-green-500 via-green-400 to-emerald-500 text-white font-bold text-4xl py-4 text-center shadow-lg tracking-wide shrink-0">
         🌿 The Singing Plant 🎵
       </h1>
 
-      <div className="flex flex-col items-center mt-6 gap-5">
-        <div className="scene">
+      <div className="flex flex-col items-center flex-1 py-4 gap-4 px-4">
+        <div className="scene w-full flex-1">
           <div className="scene-sun" />
           <div className="cloud cloud-1">☁️</div>
           <div className="cloud cloud-2">☁️</div>
@@ -134,7 +134,7 @@ function App() {
           </div>
           <div
             className="water-pour"
-            style={{ left: 355, bottom: 58 }}
+            style={{ left: 'calc(100% - 200px)', bottom: 68 }}
           >
             <div className="pour-stream" />
 
@@ -197,10 +197,9 @@ function App() {
             <source src={`http://localhost:8000${song.file}`} type="audio/mpeg" />
           )}
         </audio>
-
       </div>
     </div>
-  )
+)
 }
 
 export default App
