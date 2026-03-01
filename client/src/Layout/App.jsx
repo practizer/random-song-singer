@@ -364,7 +364,10 @@ function App() {
 
           <audio ref={audioRef} onEnded={stopSinging}>
             {song && (
-              <source src={`http://localhost:8000${song.file}`} type="audio/mpeg" />
+              <source
+                src={`${import.meta.env.VITE_API_URL}${song.file}`}
+                type="audio/mpeg"
+              />
             )}
           </audio>
         </div>
