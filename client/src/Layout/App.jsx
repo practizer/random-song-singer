@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState } from 'react'
 import api from '../api/axios'
 import './App.css'
 
@@ -25,6 +25,22 @@ const NOTES = [
   { nd: '1.5s', nx: '-6px', emoji: '♪' },
 ]
 
+const GRASS_BLADES = Array.from({ length: 60 }, (_, i) => {
+  const seed1 = Math.sin(i * 127.1) * 43758.5453
+  const seed2 = Math.sin(i * 311.7) * 43758.5453
+  const pseudo1 = seed1 - Math.floor(seed1)
+  const pseudo2 = seed2 - Math.floor(seed2)
+  return {
+    left: `${(i / 60) * 100 + (pseudo1 * 2 - 1)}%`,
+    height: `${16 + Math.sin(i * 1.7) * 6 + (i % 3) * 4}px`,
+    width: `${3 + (i % 3)}px`,
+    delay: `${(i * 0.17) % 2.5}s`,
+    duration: `${1.6 + (i % 7) * 0.25}s`,
+    lean: `${-10 + (i % 9) * 2.5}deg`,
+    color: ['#2d6b30', '#3d8b40', '#4a9e55', '#5cb85c', '#6bcb77', '#3a7d43'][i % 6],
+  }
+})
+
 function App() {
   const [song, setSong] = useState(null)
   const [isSinging, setIsSinging] = useState(false)
@@ -44,11 +60,9 @@ function App() {
           setIsSinging(true)
         }
       }, 3200)
-
       setTimeout(() => {
         setIsAnimating(false)
       }, 10300)
-
     } catch (error) {
       console.error('Error fetching song:', error)
     }
@@ -68,8 +82,27 @@ function App() {
           <div className="cloud cloud-1">☁️</div>
           <div className="cloud cloud-2">☁️</div>
           <div className="cloud cloud-3">☁️</div>
-          <div className="scene-ground" />
+
+          <div className="scene-ground">
+            {GRASS_BLADES.map((b, i) => (
+              <div
+                key={i}
+                className="grass-blade"
+                style={{
+                  left: b.left,
+                  height: b.height,
+                  width: b.width,
+                  '--delay': b.delay,
+                  '--duration': b.duration,
+                  '--lean': b.lean,
+                  background: `linear-gradient(to top, ${b.color} 0%, #7CCD7C 100%)`,
+                }}
+              />
+            ))}
+          </div>
+
           <div className="scene-soil" />
+
           <div className={`plant-wrapper ${isSinging ? 'dancing' : ''}`}>
             <img src="/images/plant.png" alt="Plant" />
             {isSinging && NOTES.map((n, i) => (
@@ -132,12 +165,9 @@ function App() {
               <div className="boy-shoe boy-shoe-r" />
             </div>
           </div>
-          <div
-            className="water-pour"
-            style={{ left: 'calc(100% - 200px)', bottom: 68 }}
-          >
-            <div className="pour-stream" />
 
+          <div className="water-pour" style={{ left: 'calc(100% - 200px)', bottom: 68 }}>
+            <div className="pour-stream" />
             {DROPS.map((d, i) => (
               <div
                 key={i}
@@ -151,7 +181,6 @@ function App() {
                 }}
               />
             ))}
-
             {SPLASHES.map((s, i) => (
               <div
                 key={i}
@@ -159,19 +188,18 @@ function App() {
                 style={{ '--sx': s.sx, '--sdelay': s.sdelay }}
               />
             ))}
-
             <div className="pour-ripple" style={{ '--rdelay': '0s' }} />
             <div className="pour-ripple" style={{ '--rdelay': '0.25s' }} />
             <div className="pour-ripple" style={{ '--rdelay': '0.5s' }} />
           </div>
-
         </div>
+
         <button
           onClick={waterPlant}
           disabled={isAnimating}
           className="
-            bg-linear-to-r from-green-500 via-emerald-500 to-green-600 
-            hover:from-green-600 hover:via-emerald-600 hover:to-green-700 
+            bg-linear-to-r from-green-500 via-emerald-500 to-green-600
+            hover:from-green-600 hover:via-emerald-600 hover:to-green-700
             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-green-500
             text-white font-bold px-10 py-4 rounded-full text-xl shadow-xl
             active:scale-95 transition-all duration-200
@@ -189,7 +217,7 @@ function App() {
         </audio>
       </div>
     </div>
-)
+  )
 }
 
 export default App
